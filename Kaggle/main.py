@@ -1,7 +1,10 @@
 import numpy as np
 import pandas as pd
+from scipy import stats, integrate
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.preprocessing import LabelEncoder
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 def normal_equation_prediction(X, y):
     """
@@ -20,9 +23,13 @@ def normal_equation_prediction(X, y):
     prediction = np.matmul(np.matmul(inverse, np.transpose(A)),y)
     return np.matmul(A,(prediction))
 
+
+
 label_encoder = LabelEncoder()
 
-train_data = pd.read_csv('train.csv') 
+train_data = pd.read_csv('train.csv')
+categorical_vars = train_data.describe(include=["object"]).columns
+continous_vars = train_data.describe().columns
 test_data = pd.read_csv('test.csv')
 predictors = ['age', 'job', 'loan']
 
@@ -33,8 +40,6 @@ y_train = train_data['y']
 tree_model = DecisionTreeClassifier()
 
 X_train = train_data[predictors]
-
-
 
 
 X_test = test_data[predictors]
@@ -57,4 +62,7 @@ output = pd.DataFrame({'Id': test_data.id, 'y': y_test})
 output.to_csv('output.csv', index=False)
 """
 
-print (train_data.groupby('education')['id'].nunique())
+sns.distplot(train_data['age'], kde=False, fit=stats.gamma);
+
+#print(train_data.describe(include=["object"]))
+#print (train_data.groupby('pdays')['id'].nunique())
